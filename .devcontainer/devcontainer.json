@@ -1,0 +1,18 @@
+{
+    "name": "Knowledge Agent",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "workspaceFolder": "/workspaces/knowledge-agent",
+    "postCreateCommand": "pip-sync requirements.txt",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.debugpy",
+                "charliermarsh.ruff",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}
