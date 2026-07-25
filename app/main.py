@@ -1,11 +1,31 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic import BaseModel
+from pathlib import Path
+
+from services.file_service import save_file
 
 app = FastAPI(
     title="Knowledge Agent API",
     version="0.1.0",
     description="An AI-powered knowledge assistant built with FastAPI and RAG."
 )
+
+class UploadResponse(BaseModel):
+    filename: str
+    message: str
+
+
+@app.post("/upload", response_model=UploadResponse)
+async def upload(file: UploadFile = File(...)) -> UploadResponse:
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="Only PDF documents are allowed.")
+
+    file_path = await save_file(file)
+
+    return UploadResponse(
+        filename=file_path.name,
+        message="PDF uploaded successfully",
+    )
 
 class ChatRequest(BaseModel):
     message: str
