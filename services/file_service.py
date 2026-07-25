@@ -1,9 +1,10 @@
 from pathlib import Path
-from fastapi import UploadFile
 
+from fastapi import UploadFile
 
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
+
 
 async def save_file(file: UploadFile) -> Path:
     file_path = UPLOAD_DIR / file.filename
