@@ -19,9 +19,17 @@ h11==0.16.0
 idna==3.18
     # via anyio
 pydantic==2.13.4
-    # via fastapi
+    # via
+    #   fastapi
+    #   pydantic-settings
 pydantic-core==2.46.4
     # via pydantic
+pydantic-settings==2.14.2
+    # via -r requirements.in
+pypdf==6.14.2
+    # via -r requirements.in
+python-dotenv==1.2.2
+    # via pydantic-settings
 python-multipart==0.0.32
     # via -r requirements.in
 ruff==0.16.0
@@ -40,5 +48,6 @@ typing-inspection==0.4.2
     # via
     #   fastapi
     #   pydantic
+    #   pydantic-settings
 uvicorn==0.51.0
     # via -r requirements.in

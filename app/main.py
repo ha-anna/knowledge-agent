@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from api import chat, upload
+from app.api import chat, upload
 
 app = FastAPI(
     title="Knowledge Agent API",
