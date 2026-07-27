@@ -1,13 +1,9 @@
 import logging
-from datetime import UTC, datetime
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
-from app.domain.document_metadata import DocumentMetadata
 from app.models.upload import UploadResponse
-from app.services.file_service import save_file
-from app.services.metadata_service import save_metadata
-from app.services.pdf_service import extract_document
+from app.services.document_service import process_document
 
 logger = logging.getLogger(__name__)
 
@@ -19,10 +15,7 @@ router = APIRouter(
 
 @router.post("", response_model=UploadResponse)
 async def upload(file: UploadFile = File(...)) -> UploadResponse:
-    logger.info(
-        "Received upload request: %s",
-        file.filename,
-    )
+    logger.info("Received upload request: %s", file.filename)
 
     if file.content_type != "application/pdf":
         logger.warning(
@@ -30,35 +23,22 @@ async def upload(file: UploadFile = File(...)) -> UploadResponse:
             file.filename,
             file.content_type,
         )
-        raise HTTPException(status_code=400, detail="Only PDF documents are allowed.")
+        raise HTTPException(
+            status_code=400,
+            detail="Only PDF documents are allowed.",
+        )
 
-    saved_file = await save_file(file)
-    document = extract_document(
-        document_id=saved_file.id,
-        path=saved_file.path,
-        original_filename=file.filename,
-    )
-
-    metadata = DocumentMetadata(
-        id=document.id,
-        filename=document.filename,
-        path=str(document.path),
-        page_count=document.page_count,
-        character_count=len(document.text),
-        uploaded_at=datetime.now(UTC),
-    )
-
-    save_metadata(metadata)
+    processed = await process_document(file)
 
     logger.info(
         "Uploaded document %s (%s)",
-        saved_file.id,
-        file.filename,
+        processed.document.id,
+        processed.document.filename,
     )
 
     return UploadResponse(
-        filename=document.filename,
-        pages=document.page_count,
-        characters=len(document.text),
+        filename=processed.document.filename,
+        pages=processed.document.page_count,
+        characters=len(processed.document.text),
         message="PDF uploaded successfully",
     )
