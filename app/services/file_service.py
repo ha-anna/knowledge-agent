@@ -6,7 +6,7 @@ from fastapi import UploadFile
 from app.core.config import settings
 from app.models.saved_file import SavedFile
 
-settings.upload_dir.mkdir(exist_ok=True)
+settings.upload_dir.mkdir(parents=True, exist_ok=True)
 
 
 async def save_file(file: UploadFile) -> SavedFile:

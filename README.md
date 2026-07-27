@@ -15,8 +15,8 @@ The goal is to understand the architecture behind production AI systems rather t
 ## Features
 
 - [x] FastAPI backend
-- [ ] PDF upload
-- [ ] Text extraction
+- [x] PDF upload
+- [x] Text extraction
 - [ ] Document chunking
 - [ ] Embedding generation
 - [ ] Vector search

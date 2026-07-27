@@ -5,7 +5,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    upload_dir: Path = Field(default=Path("uploads"))
+    upload_dir: Path = Field(default=Path("storage/uploads"))
+    metadata_dir: Path = Field(default=Path("storage/metadata"))
     chroma_dir: Path = Field(default=Path("storage/chroma"))
 
     chunk_size: int = Field(default=1000, ge=100)
