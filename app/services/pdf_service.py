@@ -1,8 +1,11 @@
+import logging
 from pathlib import Path
 
 from pypdf import PdfReader
 
 from app.domain.document import Document
+
+logger = logging.getLogger(__name__)
 
 
 def extract_document(

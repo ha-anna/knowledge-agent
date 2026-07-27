@@ -1,6 +1,13 @@
 from fastapi import FastAPI
 
-from app.api import chat, upload
+from app.api import chat, documents, upload
+from app.core.logging import logging, setup_logging
+
+logger = logging.getLogger(__name__)
+
+setup_logging()
+
+logger.info("Starting Knowledge Agent API")
 
 app = FastAPI(
     title="Knowledge Agent API",
@@ -10,7 +17,7 @@ app = FastAPI(
 
 app.include_router(chat.router)
 app.include_router(upload.router)
-
+app.include_router(documents.router)
 
 @app.get("/health")
 async def health():

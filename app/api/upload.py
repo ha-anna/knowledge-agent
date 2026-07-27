@@ -1,3 +1,4 @@
+import logging
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
@@ -8,6 +9,8 @@ from app.services.file_service import save_file
 from app.services.metadata_service import save_metadata
 from app.services.pdf_service import extract_document
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(
     prefix="/upload",
     tags=["Upload"],
@@ -16,7 +19,17 @@ router = APIRouter(
 
 @router.post("", response_model=UploadResponse)
 async def upload(file: UploadFile = File(...)) -> UploadResponse:
+    logger.info(
+        "Received upload request: %s",
+        file.filename,
+    )
+
     if file.content_type != "application/pdf":
+        logger.warning(
+            "Rejected upload '%s' (content type: %s)",
+            file.filename,
+            file.content_type,
+        )
         raise HTTPException(status_code=400, detail="Only PDF documents are allowed.")
 
     saved_file = await save_file(file)
@@ -36,6 +49,12 @@ async def upload(file: UploadFile = File(...)) -> UploadResponse:
     )
 
     save_metadata(metadata)
+
+    logger.info(
+        "Uploaded document %s (%s)",
+        saved_file.id,
+        file.filename,
+    )
 
     return UploadResponse(
         filename=document.filename,
