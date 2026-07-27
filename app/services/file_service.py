@@ -1,10 +1,13 @@
 
+import logging
 import uuid
 
 from fastapi import UploadFile
 
 from app.core.config import settings
 from app.models.saved_file import SavedFile
+
+logger = logging.getLogger(__name__)
 
 settings.upload_dir.mkdir(parents=True, exist_ok=True)
 
@@ -23,3 +26,14 @@ async def save_file(file: UploadFile) -> SavedFile:
         id=document_id,
         path=file_path,
     )
+
+
+def delete_file(document_id: str) -> None:
+    file_path = settings.upload_dir / f"{document_id}.pdf"
+
+    if not file_path.exists():
+        raise FileNotFoundError(
+            f"PDF for document '{document_id}' not found."
+        )
+
+    file_path.unlink()
