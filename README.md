@@ -21,7 +21,7 @@ The goal is to understand the architecture behind production AI systems rather t
 - [x] Text extraction
 - [x] Save metadata
 - [x] List/Get/Delete documents
-- [ ] Document chunking
+- [x] Document chunking
 - [ ] Embedding generation
 - [ ] Vector search
 - [ ] Local LLM integration
