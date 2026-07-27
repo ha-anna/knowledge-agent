@@ -9,3 +9,9 @@ class Document:
     path: Path
     text: str
     page_count: int
+
+
+@dataclass
+class ProcessedDocument:
+    document: Document
+    chunks: list[str]
