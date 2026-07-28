@@ -5,6 +5,7 @@ from fastapi import UploadFile
 
 from app.domain.document import ProcessedDocument
 from app.domain.document_metadata import DocumentMetadata
+from app.services import embedding_service
 from app.services.chunk_service import chunk_text
 from app.services.file_service import delete_file, save_file
 from app.services.metadata_service import delete_metadata, save_metadata
@@ -21,7 +22,20 @@ async def process_document(file: UploadFile) -> ProcessedDocument:
         original_filename=file.filename,
     )
 
-    chunks = chunk_text(document.text)
+    chunks = chunk_text(
+        document_id=document.id,
+        text=document.text,
+    )
+
+
+    embedded_chunks = embedding_service.embed_chunks(chunks)
+
+    logger.info(
+        "Embedding dimension: %d",
+        len(embedded_chunks[0].embedding),
+    )
+
+    # vector_store.add(embedded_chunks)
 
     metadata = DocumentMetadata(
         id=document.id,
@@ -36,7 +50,6 @@ async def process_document(file: UploadFile) -> ProcessedDocument:
 
     return ProcessedDocument(
         document=document,
-        chunks=chunks,
     )
 
 

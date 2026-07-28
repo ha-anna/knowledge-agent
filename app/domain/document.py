@@ -14,4 +14,3 @@ class Document:
 @dataclass
 class ProcessedDocument:
     document: Document
-    chunks: list[str]
