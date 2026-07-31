@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     upload_dir: Path = Field(default=Path("storage/uploads"))
     metadata_dir: Path = Field(default=Path("storage/metadata"))
-    chroma_dir: Path = Field(default=Path("storage/chroma"))
+    vector_db_dir: Path = Path("storage/vectors")
 
     chunk_size: int = Field(default=1000, ge=100)
     chunk_overlap: int = Field(default=200, ge=0)

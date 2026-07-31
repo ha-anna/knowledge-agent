@@ -59,5 +59,3 @@ class EmbeddingService:
         )
 
         return embedded_chunks
-
-embedding_service = EmbeddingService()

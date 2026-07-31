@@ -5,4 +5,4 @@ ruff
 pypdf
 pydantic-settings
 sentence-transformers
-
+chromadb
