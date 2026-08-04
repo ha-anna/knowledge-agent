@@ -11,6 +11,6 @@ class Chunk:
 
 @dataclass
 class EmbeddedChunk:
-    chunk: Chunk
+    source_chunk: Chunk
     embedding: list[float]
 

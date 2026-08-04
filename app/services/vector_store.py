@@ -24,19 +24,33 @@ class VectorStore:
 
     def add(
         self,
-        embedded_chunks: list[EmbeddedChunk],
+        chunks: list[EmbeddedChunk],
     ) -> None:
-        if not embedded_chunks:
+        if not chunks:
             logger.info("No embedded chunks to add.")
             return
 
-        ids = [ec.chunk.id for ec in embedded_chunks]
-        documents = [ec.chunk.text for ec in embedded_chunks]
-        embeddings = [ec.embedding for ec in embedded_chunks]
-        metdatas = [{
-            "document_id": ec.chunk.id,
-            "chunk_index": ec.chunk.index,
-        } for ec in embedded_chunks]
+        ids = [ec.source_chunk.id for ec in chunks]
+        documents = [ec.source_chunk.text for ec in chunks]
+        embeddings = [ec.embedding for ec in chunks]
+        metadatas = [{
+            "document_id": ec.source_chunk.id,
+            "chunk_index": ec.source_chunk.index,
+        } for ec in chunks]
 
-        
+        logger.info("Adding %d chunks to vector store", len(ids))
+
+        self.collection.add(
+            ids=ids,
+            documents=documents,
+            embeddings=embeddings,
+            metadatas=metadatas,
+        )
+
+        logger.info("Successfully stored %d chunks", len(ids))
+
+
+
+
+
 
