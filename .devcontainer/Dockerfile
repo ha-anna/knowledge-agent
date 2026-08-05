@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:1-3.11-bullseye
+FROM mcr.microsoft.com/devcontainers/python:1-3.11-bookworm
 
 # Fix broken yarn repo (important)
 RUN rm -f /etc/apt/sources.list.d/yarn.list
