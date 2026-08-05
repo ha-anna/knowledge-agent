@@ -3,7 +3,9 @@ import logging
 import chromadb
 
 from app.core.config import settings
+from app.core.services import embedding_service
 from app.domain.chunk import EmbeddedChunk
+from app.domain.search import SearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +50,17 @@ class VectorStore:
         )
 
         logger.info("Successfully stored %d chunks", len(ids))
+
+    def search(self, query: str, top_k: int = 5) -> list[SearchResult]:
+
+        query_embedding = embedding_service.embed_text(query)
+
+        results = self.collection.query(
+            query_embeddings=[query_embedding],
+            n_results=top_k,
+        )
+
+        return results
 
 
 

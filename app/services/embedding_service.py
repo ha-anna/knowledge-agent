@@ -59,3 +59,10 @@ class EmbeddingService:
         )
 
         return embedded_chunks
+    
+    def embed_text(self, text: str,) -> list[float]:
+        
+        return self.model.encode(
+            text,
+            normalize_embeddings=True,
+        ).tolist()
