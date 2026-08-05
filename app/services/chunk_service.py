@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 def chunk_text(
     document_id: str,
     text: str,
+    filename: str,
     chunk_size: int = 1000,
     overlap: int = 200,
 ) -> list[Chunk]:
@@ -40,6 +41,7 @@ def chunk_text(
             Chunk(
                 id=f"{document_id}_{index}",
                 document_id=document_id,
+                filename=filename,
                 index=index,
                 text=text[start:end],
             )

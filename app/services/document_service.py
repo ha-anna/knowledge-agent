@@ -25,6 +25,7 @@ async def process_document(file: UploadFile) -> ProcessedDocument:
     chunks = chunk_text(
         document_id=document.id,
         text=document.text,
+        filename=document.filename
     )
 
 

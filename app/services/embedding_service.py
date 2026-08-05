@@ -48,7 +48,7 @@ class EmbeddingService:
         for chunk, embedding in zip(chunks, embeddings):
             embedded_chunks.append(
                 EmbeddedChunk(
-                    chunk=chunk,
+                    source_chunk=chunk,
                     embedding=embedding.tolist(),
                 )
             )
