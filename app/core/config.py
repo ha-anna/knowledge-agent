@@ -13,9 +13,12 @@ class Settings(BaseSettings):
     chunk_overlap: int = Field(default=200, ge=0)
 
     embedding_model: str = Field(default="all-MiniLM-L6-v2")
-    llm_model: str = Field(default="llama3.2")
+    ollama_model: str = Field(default="llama3.2:3b")
+
+    ollama_base_url: str = Field(default="http://ollama:11434")
 
     log_level: str = Field(default="INFO")
+    top_k: int = Field(default=5, ge=1)
 
     model_config = SettingsConfigDict(
         env_file=".env",

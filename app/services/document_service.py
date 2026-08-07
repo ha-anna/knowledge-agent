@@ -3,7 +3,8 @@ from datetime import UTC, datetime
 
 from fastapi import UploadFile
 
-from app.core.services import embedding_service, vector_store
+from app.core.dependencies.embedding import embedding_service
+from app.core.dependencies.vector_store import vector_store
 from app.domain.document import ProcessedDocument
 from app.domain.document_metadata import DocumentMetadata
 from app.services.chunk_service import chunk_text

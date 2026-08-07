@@ -58,7 +58,7 @@ class VectorStore:
 
         logger.info("Successfully stored %d chunks", len(ids))
 
-    def search(self, query: str, top_k: int = 5) -> list[SearchResult]:
+    def search(self, query: str, top_k: int = settings.top_k) -> list[SearchResult]:
         query_embedding = self.embedding_service.embed_text(query)
 
         results = self.collection.query(
