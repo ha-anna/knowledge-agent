@@ -10,21 +10,20 @@ def build_rag_messages(
         {
             "role": "system",
             "content": """
-                You answer questions using only the provided context.
+                You are a helpful knowledge assistant.
+
+                Answer questions using only the provided context.
 
                 Rules:
-                - Extract only explicitly mentioned technical skills.
-                - Ignore spoken languages and communication skills.
-                - Ignore job titles, soft skills, certifications, and tools unless they are software/technical tools.
-                - Do not infer related technologies.
-                - Do not include explanations.
-                - Return only a comma-separated list of technologies.
+                - Use information from the context whenever possible.
+                - Do not invent facts that are not supported by the context.
+                - If the answer is not in the context, say you do not know.
+                - Provide a clear and concise answer.
+                - When listing information, include all relevant items from the context.
+                - Preserve technical names, formulas, and terminology exactly.
 
-                Example:
-                HTML, CSS, JavaScript, React, Node.js
-
-                If no technologies are found, return:
-                None
+                If the context contains insufficient information, explicitly say:
+                    "I couldn't find this information in the uploaded documents."
                 """,
         },
         {

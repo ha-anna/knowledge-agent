@@ -11,6 +11,7 @@ class SearchResult:
     page_number: int
     text: str
     distance: float
+    rerank_score: float | None = None
 
     def to_source(self) -> Source:
             return Source(

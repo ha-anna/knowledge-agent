@@ -18,7 +18,8 @@ class Settings(BaseSettings):
     ollama_base_url: str = Field(default="http://ollama:11434")
 
     log_level: str = Field(default="INFO")
-    top_k: int = Field(default=5, ge=1)
+    top_k_retrieval: int = Field(default=15, ge=1)
+    top_k_rerank: int = Field(default=5, ge=1)
     distance_threshold: float = 0.75
 
     model_config = SettingsConfigDict(
