@@ -7,7 +7,7 @@ from app.core.dependencies.embedding import embedding_service
 from app.core.dependencies.vector_store import vector_store
 from app.domain.document import ProcessedDocument
 from app.domain.document_metadata import DocumentMetadata
-from app.services.chunk_service import chunk_text
+from app.services.chunk_service import chunk_pages
 from app.services.file_service import delete_file, save_file
 from app.services.metadata_service import delete_metadata, save_metadata
 from app.services.pdf_service import extract_document
@@ -23,10 +23,11 @@ async def process_document(file: UploadFile) -> ProcessedDocument:
         original_filename=file.filename,
     )
 
-    chunks = chunk_text(
+    chunks = chunk_pages(
         document_id=document.id,
         text=document.text,
         filename=document.filename
+
     )
 
 

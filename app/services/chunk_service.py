@@ -1,6 +1,7 @@
 import logging
 
 from app.domain.chunk import Chunk
+from app.domain.document import DocumentPage
 
 logger = logging.getLogger(__name__)
 
@@ -9,6 +10,7 @@ def chunk_text(
     document_id: str,
     text: str,
     filename: str,
+    page_number: int,
     chunk_size: int = 1000,
     overlap: int = 200,
 ) -> list[Chunk]:
@@ -39,9 +41,10 @@ def chunk_text(
 
         chunks.append(
             Chunk(
-                id=f"{document_id}_{index}",
+                id=f"{document_id}_{page_number}_{index}",
                 document_id=document_id,
                 filename=filename,
+                page_number= page_number,
                 index=index,
                 text=text[start:end],
             )
@@ -64,5 +67,26 @@ def chunk_text(
             len(chunk.text),
             chunk.text,
         )
+
+    return chunks
+
+
+def chunk_pages(
+        document_id: str,
+        pages: list[DocumentPage],
+        filename: str,
+    ) -> list[Chunk]:
+
+    chunks = []
+
+    for page in pages:
+        page_chunks = chunk_text(
+            document_id=document_id,
+            text=page.text,
+            filename=filename,
+            page_number=page.page_number,
+        )
+
+        chunks.extend(page_chunks)
 
     return chunks
