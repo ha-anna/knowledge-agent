@@ -75,14 +75,14 @@ class VectorStore:
     def search(
         self,
         query: str,
-        top_k: int = settings.top_k,
+        top_k_retrieval: int = settings.top_k_retrieval,
     ) -> list[SearchResult]:
 
         embedding = self.embedding_service.embed_text(query)
 
         results = self.collection.query(
             query_embeddings=[embedding],
-            n_results=top_k,
+            n_results=top_k_retrieval,
             include=[
                 "documents",
                 "metadatas",
