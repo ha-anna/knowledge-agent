@@ -88,6 +88,7 @@ httpx==0.28.1
     # via
     #   chromadb
     #   huggingface-hub
+    #   ollama
 huggingface-hub==1.25.1
     # via
     #   sentence-transformers
@@ -180,6 +181,8 @@ nvidia-nvtx==13.0.85
     # via cuda-toolkit
 oauthlib==3.3.1
     # via requests-oauthlib
+ollama==0.6.2
+    # via -r requirements.in
 onnxruntime==1.28.0
     # via chromadb
 opentelemetry-api==1.44.0
@@ -227,6 +230,7 @@ pydantic==2.13.4
     # via
     #   chromadb
     #   fastapi
+    #   ollama
     #   pydantic-settings
 pydantic-core==2.46.4
     # via pydantic

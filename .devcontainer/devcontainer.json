@@ -1,8 +1,7 @@
 {
     "name": "Knowledge Agent",
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "app",
     "workspaceFolder": "/workspaces/knowledge-agent",
     "postCreateCommand": "pip-sync requirements.txt",
     "customizations": {
