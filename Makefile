@@ -46,13 +46,13 @@ lint:
 lint-fix:
 	ruff check . --fix
 
-test:
-	pytest
-
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	rm -rf .pytest_cache .ruff_cache .mypy_cache
+
+clean-vectors:
+	rm -rf storage/vectors
 
 docker-build:
 	docker compose build
@@ -70,3 +70,22 @@ docker-rebuild:
 	docker compose down
 	docker compose build --no-cache
 	docker compose up
+
+# =====================
+# Testing
+# =====================
+
+test:
+	python -m pytest tests
+
+test-embedding:
+	python -m tests.test_embedding
+
+test-vector-store:
+	python -m tests.test_vector_store
+
+test-ollama:
+	python -m tests.test_ollama
+
+test-rag:
+	python -m tests.test_rag

@@ -19,6 +19,7 @@ class Settings(BaseSettings):
 
     log_level: str = Field(default="INFO")
     top_k: int = Field(default=5, ge=1)
+    distance_threshold: float = 0.75
 
     model_config = SettingsConfigDict(
         env_file=".env",
