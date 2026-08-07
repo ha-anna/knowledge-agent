@@ -17,8 +17,10 @@ def main():
     print("=" * 50)
 
     for source in response.sources:
-        print(source.filename)
-        print(source.chunk_id)
+        print("File:", source.filename)
+        print("Page:", source.page_number)
+        print("Score:", source.score)
+        print("Snippet:", source.snippet)
         print()
 
 

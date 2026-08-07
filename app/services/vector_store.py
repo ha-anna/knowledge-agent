@@ -41,11 +41,15 @@ class VectorStore:
         ids = [ec.source_chunk.id for ec in chunks]
         documents = [ec.source_chunk.text for ec in chunks]
         embeddings = [ec.embedding for ec in chunks]
-        metadatas = [{
-            "document_id": ec.source_chunk.document_id,
-            "filename": ec.source_chunk.filename,
-            "chunk_index": ec.source_chunk.index,
-        } for ec in chunks]
+        metadatas = [
+            {
+                "document_id": ec.source_chunk.document_id,
+                "filename": ec.source_chunk.filename,
+                "page_number": ec.source_chunk.page_number,
+                "chunk_index": ec.source_chunk.index,
+            }
+            for ec in chunks
+        ]
 
         logger.info("Adding %d chunks to vector store", len(ids))
 
@@ -74,6 +78,7 @@ class VectorStore:
                     document_id=results["metadatas"][0][i]["document_id"],
                     chunk_id=results["ids"][0][i],
                     filename=results["metadatas"][0][i]["filename"],
+                    page_number=results["metadatas"][0][i]["page_number"],
                     text=results["documents"][0][i],
                     distance=results["distances"][0][i],
                 )

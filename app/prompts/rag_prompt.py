@@ -18,6 +18,8 @@ def build_rag_messages(
                 3. Do not infer missing information.
                 4. If something is not explicitly stated, say it is not specified.
                 5. Keep answers concise.
+                6. Do not mention "the provided context".
+                7. Cite page numbers when possible.
                 """,
         },
         {

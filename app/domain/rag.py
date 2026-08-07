@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from app.domain.search import SearchResult
+from app.domain.source import Source
 
 
 @dataclass
 class RAGResponse:
     answer: str
-    sources: list[SearchResult]
+    sources: list[Source]

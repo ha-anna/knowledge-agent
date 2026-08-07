@@ -7,12 +7,14 @@ class DocumentPage:
     page_number: int
     text: str
 
+
 @dataclass
 class Document:
     id: str
     filename: str
     path: Path
     text: str
+    pages: list[DocumentPage]
     page_count: int
 
 

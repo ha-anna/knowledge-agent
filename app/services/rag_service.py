@@ -38,6 +38,9 @@ class RAGService:
 
         return RAGResponse(
             answer=answer,
-            sources=results,
+            sources=[
+                result.to_source()
+                for result in results
+            ],
         )
     
