@@ -1,5 +1,4 @@
 
-from app.domain.search import SearchResult
 
 
 def build_rag_messages(
