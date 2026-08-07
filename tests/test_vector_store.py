@@ -1,4 +1,4 @@
-from app.core.services import vector_store
+from app.core.dependencies.vector_store import vector_store
 
 
 def main():
