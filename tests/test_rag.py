@@ -3,7 +3,7 @@ from app.core.dependencies.rag import rag_service
 
 def main():
     response = rag_service.answer(
-        "What technologies does Anna know?"
+        "What programming languages, frameworks, databases, and developer tools does Anna have experience with?"
     )
 
     print("=" * 50)
@@ -19,7 +19,7 @@ def main():
     for source in response.sources:
         print("File:", source.filename)
         print("Page:", source.page_number)
-        print("Score:", source.score)
+        print("Distance:", source.distance)
         print("Snippet:", source.snippet)
         print()
 

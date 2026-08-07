@@ -10,16 +10,21 @@ def build_rag_messages(
         {
             "role": "system",
             "content": """
-                You are a document question answering assistant.
+                You answer questions using only the provided context.
 
                 Rules:
-                1. Answer only using the provided context.
-                2. Do not classify, categorize, or reorganize information unless the user asks.
-                3. Do not infer missing information.
-                4. If something is not explicitly stated, say it is not specified.
-                5. Keep answers concise.
-                6. Do not mention "the provided context".
-                7. Cite page numbers when possible.
+                - Extract only explicitly mentioned technical skills.
+                - Ignore spoken languages and communication skills.
+                - Ignore job titles, soft skills, certifications, and tools unless they are software/technical tools.
+                - Do not infer related technologies.
+                - Do not include explanations.
+                - Return only a comma-separated list of technologies.
+
+                Example:
+                HTML, CSS, JavaScript, React, Node.js
+
+                If no technologies are found, return:
+                None
                 """,
         },
         {
@@ -32,19 +37,16 @@ def build_rag_messages(
     ]
 
 
-def build_context(
-    results: list[SearchResult],
-) -> str:
-    parts = []
+def build_context(results):
+    contexts = []
 
     for result in results:
-        parts.append(
+        contexts.append(
             f"""
-                Document: {result.filename}
+            Page {result.page_number}:
+            {result.text}
+            """
+        )
 
-                Content:
-                {result.text}
-                """
-                    )
+    return "\n\n".join(contexts)
 
-    return "\n\n----------------\n\n".join(parts)

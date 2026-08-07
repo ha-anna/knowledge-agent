@@ -17,6 +17,6 @@ class SearchResult:
                 filename=self.filename,
                 page_number=self.page_number,
                 chunk_id=self.chunk_id,
-                score=1 - self.distance,
+                distance=self.distance,
                 snippet=self.text[:300],
             )

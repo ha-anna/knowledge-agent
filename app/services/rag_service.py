@@ -21,6 +21,14 @@ class RAGService:
 
         results = self.vector_store.search(question)
 
+        for result in results:
+            logger.info(
+                "Retrieved page=%s distance=%s text=%s",
+                result.page_number,
+                result.distance,
+                result.text[:100],
+            )
+
         logger.info("Retrieved %d chunks", len(results))
         
         context = build_context(results)

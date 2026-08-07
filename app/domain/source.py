@@ -6,5 +6,5 @@ class Source:
     filename: str
     page_number: int
     chunk_id: str
-    score: float
+    distance: float
     snippet: str

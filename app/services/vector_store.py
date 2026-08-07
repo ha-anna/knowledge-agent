@@ -38,6 +38,16 @@ class VectorStore:
             logger.info("No embedded chunks to add.")
             return
 
+
+        #temporary
+        for ec in chunks:
+            logger.info(
+                "ADDING | page=%s chunk=%s text=%s",
+                ec.source_chunk.page_number,
+                ec.source_chunk.index,
+                ec.source_chunk.text[:200],
+            )
+
         ids = [ec.source_chunk.id for ec in chunks]
         documents = [ec.source_chunk.text for ec in chunks]
         embeddings = [ec.embedding for ec in chunks]
@@ -62,17 +72,33 @@ class VectorStore:
 
         logger.info("Successfully stored %d chunks", len(ids))
 
-    def search(self, query: str, top_k: int = settings.top_k) -> list[SearchResult]:
-        query_embedding = self.embedding_service.embed_text(query)
+    def search(
+        self,
+        query: str,
+        top_k: int = settings.top_k,
+    ) -> list[SearchResult]:
+
+        embedding = self.embedding_service.embed_text(query)
 
         results = self.collection.query(
-            query_embeddings=[query_embedding],
+            query_embeddings=[embedding],
             n_results=top_k,
+            include=[
+                "documents",
+                "metadatas",
+                "distances",
+            ],
         )
 
         search_results = []
 
         for i in range(len(results["ids"][0])):
+
+            distance = results["distances"][0][i]
+
+            if distance > settings.distance_threshold:
+                continue
+
             search_results.append(
                 SearchResult(
                     document_id=results["metadatas"][0][i]["document_id"],
@@ -80,7 +106,7 @@ class VectorStore:
                     filename=results["metadatas"][0][i]["filename"],
                     page_number=results["metadatas"][0][i]["page_number"],
                     text=results["documents"][0][i],
-                    distance=results["distances"][0][i],
+                    distance=distance,
                 )
             )
 

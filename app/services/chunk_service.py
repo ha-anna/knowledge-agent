@@ -53,15 +53,12 @@ def chunk_text(
         start += step
         index += 1
 
-    if len(chunks) > 1 and len(chunks[-1].text) < chunk_size // 2:
-        last = chunks.pop()
-        chunks[-1].text += last.text[overlap:]
-
     logger.info("Created %d chunks", len(chunks))
 
     for chunk in chunks:
         logger.info(
-            "Chunk %d/%d | %d chars | %.100r",
+            "Page %d | Chunk %d/%d | %d chars | %.100r",
+            chunk.page_number,
             chunk.index + 1,
             len(chunks),
             len(chunk.text),
@@ -72,10 +69,12 @@ def chunk_text(
 
 
 def chunk_pages(
-        document_id: str,
-        pages: list[DocumentPage],
-        filename: str,
-    ) -> list[Chunk]:
+    document_id: str,
+    pages: list[DocumentPage],
+    filename: str,
+    chunk_size: int = 1000,
+    overlap: int = 200,
+) -> list[Chunk]:
 
     chunks = []
 
@@ -85,6 +84,8 @@ def chunk_pages(
             text=page.text,
             filename=filename,
             page_number=page.page_number,
+            chunk_size=chunk_size,
+            overlap=overlap,
         )
 
         chunks.extend(page_chunks)
