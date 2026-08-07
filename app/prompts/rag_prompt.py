@@ -2,28 +2,32 @@
 from app.domain.search import SearchResult
 
 
-def build_rag_prompt(question: str, context: str) -> str:
-    return PROMPT_TEMPLATE.format(
-        context=context,
-        question=question,
-    )
+def build_rag_messages(
+    question: str,
+    context: str,
+) -> list[dict[str, str]]:
+    return [
+        {
+            "role": "system",
+            "content": """
+                You are a document question answering assistant.
 
-
-PROMPT_TEMPLATE = """
-You are a helpful AI assistant.
-
-Answer the user's question using ONLY the provided context.
-
-If the answer cannot be found in the context, say that you don't know.
-
-Context:
-{context}
-
-Question:
-{question}
-
-Answer:
-""".strip()
+                Rules:
+                1. Answer only using the provided context.
+                2. Do not classify, categorize, or reorganize information unless the user asks.
+                3. Do not infer missing information.
+                4. If something is not explicitly stated, say it is not specified.
+                5. Keep answers concise.
+                """,
+        },
+        {
+            "role": "user",
+            "content": (
+                f"Context:\n{context}\n\n"
+                f"Question:\n{question}"
+            ),
+        },
+    ]
 
 
 def build_context(
