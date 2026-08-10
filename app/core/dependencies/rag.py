@@ -1,3 +1,5 @@
+# dependencies/rag.py
+
 from app.core.dependencies.llm import llm_service
 from app.core.dependencies.reranker import reranker_service
 from app.core.dependencies.vector_store import vector_store
@@ -8,3 +10,7 @@ rag_service = RAGService(
     llm_service=llm_service,
     reranker_service=reranker_service,
 )
+
+
+def get_rag_service() -> RAGService:
+    return rag_service

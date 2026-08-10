@@ -4,8 +4,9 @@
 def build_rag_messages(
     question: str,
     context: str,
+    history: list[dict[str, str]],
 ) -> list[dict[str, str]]:
-    return [
+    messages = [
         {
             "role": "system",
             "content": """
@@ -20,19 +21,33 @@ def build_rag_messages(
                 - Provide a clear and concise answer.
                 - When listing information, include all relevant items from the context.
                 - Preserve technical names, formulas, and terminology exactly.
+                - Do not add information that is not explicitly stated.
+                - Do not infer relationships or categories.
+                - Do not classify items unless the context explicitly classifies them.
+                - Preserve names exactly as written.
+                - If the context contains a list, reproduce the list accurately.
+                - If information is missing, say it is not specified.
 
                 If the context contains insufficient information, explicitly say:
                     "I couldn't find this information in the uploaded documents."
                 """,
-        },
-        {
-            "role": "user",
-            "content": (
-                f"Context:\n{context}\n\n"
-                f"Question:\n{question}"
-            ),
-        },
-    ]
+        }]
+
+    for message in history:
+        messages.append({
+            "role": message["role"],
+            "content": message["content"],
+        })
+
+    messages.append({
+        "role": "user",
+        "content": (
+            f"Context:\n{context}\n\n"
+            f"Question:\n{question}"
+        ),
+    })
+
+    return messages
 
 
 def build_context(results):

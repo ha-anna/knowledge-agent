@@ -1,5 +1,6 @@
 import logging
 
+from app.domain.conversation import Message
 from app.domain.rag import RAGResponse
 from app.prompts.rag_prompt import build_context, build_rag_messages
 from app.services.llm.ollama_service import OllamaService
@@ -19,7 +20,7 @@ class RAGService:
         self.llm_service = llm_service
         self.reranker_service = reranker_service
     
-    def answer(self, question: str) -> RAGResponse:
+    def answer(self, question: str, history: list[Message]) -> RAGResponse:
         logger.info("Searching vector store")
 
         results = self.vector_store.search(question)
@@ -37,16 +38,36 @@ class RAGService:
         results = self.reranker_service.rerank(
             question,
             results,
-            top_k=5,
+            top_k_rerank=5,
         )
+
+        logger.info("After reranking:")
+
+        for result in results:
+            logger.info(
+                "Reranked page=%s distance=%s rerank_score=%s text=%s",
+                result.page_number,
+                result.distance,
+                getattr(result, "rerank_score", None),
+                result.text[:100],
+            )
         
         context = build_context(results)
 
         logger.info("Building prompt")
 
+        history_dicts = [
+            {
+                "role": message.role,
+                "content": message.content,
+            }
+            for message in history
+        ]
+
         messages = build_rag_messages(
             question=question,
             context=context,
+            history=history_dicts,
         )
 
         logger.info("Generating answer")

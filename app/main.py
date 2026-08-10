@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api import chat, documents, upload
+from app.api import conversations, documents, upload
 from app.core.logging import logging, setup_logging
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ app = FastAPI(
     description="An AI-powered knowledge assistant built with FastAPI and RAG.",
 )
 
-app.include_router(chat.router)
+app.include_router(conversations.router)
 app.include_router(upload.router)
 app.include_router(documents.router)
 

@@ -3,7 +3,7 @@ from app.core.dependencies.rag import rag_service
 
 def main():
     response = rag_service.answer(
-        "What programming languages, frameworks, databases, and developer tools does Anna have experience with?"
+        "List all technologies mentioned in the documents."
     )
 
     print("=" * 50)
