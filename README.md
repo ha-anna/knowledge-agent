@@ -12,22 +12,83 @@ This project explores how Retrieval-Augmented Generation (RAG) can be used to bu
 
 The goal is to understand the architecture behind production AI systems rather than simply calling an LLM API.
 
-## Features
+## Knowledge Agent — Project Progress
+
+### Backend
 
 - [x] FastAPI backend
 - [x] Project structure
+- [x] Configuration & environment variables
+- [x] Dependency injection
+- [x] Logging
+
+### Documents
+
 - [x] PDF upload
-- [x] Save files
+- [x] File storage
 - [x] Text extraction
-- [x] Save metadata
-- [x] List/Get/Delete documents
+- [x] Document metadata
+- [x] List / Get / Delete documents
+
+### Document Processing
+
 - [x] Document chunking
-- [ ] Embedding generation
-- [ ] Vector search
-- [ ] Local LLM integration
-- [ ] Retrieval-Augmented Generation
+- [x] Embedding generation
+- [x] Vector database
+- [x] Store embeddings & metadata
+
+### Retrieval
+
+- [x] Vector search
+- [x] Reranking
+- [ ] Retrieval quality improvements
+
+### LLM
+
+- [x] Local LLM integration
+- [x] Ollama + Docker
+- [x] LLM service
+- [ ] Streaming responses
+- [ ] Error handling
+
+### RAG
+
+- [x] Context retrieval
+- [x] Context construction
+- [x] RAG prompt
+- [x] Grounded answers
 - [ ] Source citations
-- [ ] Conversation history
+- [ ] Improve grounding / retrieval quality
+
+### Conversations
+
+- [x] Conversation creation
+- [x] Message storage
+- [x] Conversation history
+- [x] Multi-turn conversations
+- [ ] Persistent conversation storage
+- [ ] Conversation management
+
+### Agent
+
+- [ ] RAG vs. normal conversation
+- [ ] Follow-up questions
+- [ ] Better use of conversation context
+
+### API & Quality
+
+- [x] Document endpoints
+- [x] Conversation endpoints
+- [ ] Better error handling
+- [ ] Automated tests
+- [ ] API polish
+
+### Deployment
+
+- [x] Docker development environment
+- [x] Docker Compose
+- [x] Ollama container
+- [ ] Production deployment
 
 ## Tech Stack
 
