@@ -62,7 +62,7 @@ data/
 # Future RAG directories
 chroma/
 embeddings/
-models/
+/models/
 
 # =========================
 # Local Databases
