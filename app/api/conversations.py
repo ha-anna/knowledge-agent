@@ -42,7 +42,11 @@ def send_message(
         ) from exc
 
     history = list(conversation.messages)
-    rag_response = rag_service.answer(request.content, history)
+    rag_response = rag_service.answer(
+        request.content,
+        history,
+        document_id=request.document_id,
+    )
 
     user_message = Message(role="user", content=request.content)
     assistant_message = Message(

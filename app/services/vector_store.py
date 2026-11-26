@@ -35,15 +35,6 @@ class VectorStore:
             logger.info("No embedded chunks to add.")
             return
 
-        # temporary
-        for ec in chunks:
-            logger.info(
-                "ADDING | page=%s chunk=%s text=%s",
-                ec.source_chunk.page_number,
-                ec.source_chunk.index,
-                ec.source_chunk.text[:200],
-            )
-
         ids = [ec.source_chunk.id for ec in chunks]
         documents = [ec.source_chunk.text for ec in chunks]
         embeddings = [ec.embedding for ec in chunks]
@@ -72,12 +63,14 @@ class VectorStore:
         self,
         query: str,
         top_k_retrieval: int = settings.top_k_retrieval,
+        document_id: str | None = None
     ) -> list[SearchResult]:
 
         embedding = self.embedding_service.embed_text(query)
 
         results = self.collection.query(
             query_embeddings=[embedding],
+            where={"document_id": document_id} if document_id is not None else None,
             n_results=top_k_retrieval,
             include=[
                 "documents",

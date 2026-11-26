@@ -1,5 +1,6 @@
 import logging
 
+from app.core.config import settings
 from app.domain.conversation import Message
 from app.domain.rag import RAGResponse
 from app.prompts.rag_prompt import build_context, build_rag_messages
@@ -21,10 +22,14 @@ class RAGService:
         self.llm_service = llm_service
         self.reranker_service = reranker_service
 
-    def answer(self, question: str, history: list[Message]) -> RAGResponse:
+    def answer(
+        self,
+        question: str,
+        history: list[Message],
+        document_id: str | None = None,
+    ) -> RAGResponse:
         logger.info("Searching vector store")
-
-        results = self.vector_store.search(question)
+        results = self.vector_store.search(question, document_id=document_id)
 
         for result in results:
             logger.info(
@@ -39,18 +44,17 @@ class RAGService:
         results = self.reranker_service.rerank(
             question,
             results,
-            top_k_rerank=5,
+            top_k_rerank=settings.top_k_rerank,
         )
 
-        logger.info("After reranking:")
-
+        logger.info("Kept %d chunks after reranking", len(results))
         for result in results:
-            logger.info(
-                "Reranked page=%s distance=%s rerank_score=%s text=%s",
+            logger.debug(
+                "Reranked chunk %s | page=%d | distance=%s | score=%s",
+                result.chunk_id,
                 result.page_number,
                 result.distance,
-                getattr(result, "rerank_score", None),
-                result.text[:100],
+                result.rerank_score,
             )
 
         context = build_context(results)

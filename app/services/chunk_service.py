@@ -56,13 +56,11 @@ def chunk_text(
     logger.info("Created %d chunks", len(chunks))
 
     for chunk in chunks:
-        logger.info(
-            "Page %d | Chunk %d/%d | %d chars | %.100r",
+        logger.debug(
+            "Created chunk %s | page=%d | characters=%d",
+            chunk.id,
             chunk.page_number,
-            chunk.index + 1,
-            len(chunks),
             len(chunk.text),
-            chunk.text,
         )
 
     return chunks

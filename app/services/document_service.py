@@ -3,14 +3,16 @@ from datetime import UTC, datetime
 
 from fastapi import UploadFile
 
+from app.core.config import settings
 from app.core.dependencies.embedding import embedding_service
 from app.core.dependencies.vector_store import vector_store
 from app.domain.document import ProcessedDocument
 from app.domain.document_metadata import DocumentMetadata
 from app.services.chunk_service import chunk_pages
 from app.services.file_service import delete_file, save_file
-from app.services.metadata_service import delete_metadata, save_metadata
+from app.services.metadata_service import delete_metadata, load_metadata, save_metadata
 from app.services.pdf_service import extract_document
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +40,8 @@ async def process_document(file: UploadFile) -> ProcessedDocument:
             document_id=document.id,
             pages=document.pages,
             filename=document.filename,
+            chunk_size=settings.chunk_size,
+            overlap=settings.chunk_overlap,
         )
 
         embedded_chunks = embedding_service.embed_chunks(chunks)
@@ -84,6 +88,12 @@ async def process_document(file: UploadFile) -> ProcessedDocument:
 
 
 def delete_document(document_id: str) -> None:
+    load_metadata(document_id)
     vector_store.delete_document(document_id)
-    delete_file(document_id)
+
+    try:
+        delete_file(document_id)
+    except FileNotFoundError:
+        pass
+
     delete_metadata(document_id)
