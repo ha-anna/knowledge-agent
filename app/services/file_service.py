@@ -1,4 +1,3 @@
-
 import logging
 import uuid
 
@@ -16,11 +15,19 @@ async def save_file(file: UploadFile) -> SavedFile:
     document_id = str(uuid.uuid4())
     file_path = settings.upload_dir / f"{document_id}.pdf"
 
-    with open(file_path, "wb") as f:
-        while chunk := await file.read(1024 * 1024):
-            f.write(chunk)
+    try:
+        with file_path.open("wb") as output:
+            while chunk := await file.read(1024 * 1024):
+                output.write(chunk)
 
-    await file.close()
+        await file.close()
+    except Exception:
+        try:
+            file_path.unlink(missing_ok=True)
+        except OSError:
+            logger.exception("Could not remove partial PDF for %s", document_id)
+
+        raise
 
     return SavedFile(
         id=document_id,
@@ -32,8 +39,6 @@ def delete_file(document_id: str) -> None:
     file_path = settings.upload_dir / f"{document_id}.pdf"
 
     if not file_path.exists():
-        raise FileNotFoundError(
-            f"PDF for document '{document_id}' not found."
-        )
+        raise FileNotFoundError(f"PDF for document '{document_id}' not found.")
 
     file_path.unlink()

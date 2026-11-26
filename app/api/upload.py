@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from app.models.upload import UploadResponse
-from app.services.document_service import process_document
+from app.services.document_service import NoExtractableTextError, process_document
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,10 @@ async def upload(file: UploadFile = File(...)) -> UploadResponse:
             detail="Only PDF documents are allowed.",
         )
 
-    processed = await process_document(file)
+    try:
+        processed = await process_document(file)
+    except NoExtractableTextError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     logger.info(
         "Uploaded document %s (%s)",

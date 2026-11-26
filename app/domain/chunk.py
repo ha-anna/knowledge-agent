@@ -15,4 +15,3 @@ class Chunk:
 class EmbeddedChunk:
     source_chunk: Chunk
     embedding: list[float]
-

@@ -14,47 +14,76 @@ from app.services.pdf_service import extract_document
 
 logger = logging.getLogger(__name__)
 
+
+class NoExtractableTextError(ValueError):
+    pass
+
+
 async def process_document(file: UploadFile) -> ProcessedDocument:
+    indexing_started = False
+    metadata_write_started = False
     saved_file = await save_file(file)
 
-    document = extract_document(
-        document_id=saved_file.id,
-        path=saved_file.path,
-        original_filename=file.filename,
-    )
+    try:
+        document = extract_document(
+            document_id=saved_file.id,
+            path=saved_file.path,
+            original_filename=file.filename,
+        )
 
-    chunks = chunk_pages(
-        document_id=document.id,
-        pages=document.pages,
-        filename=document.filename,
-    )
+        if not document.text.strip():
+            raise NoExtractableTextError("This PDF has no extractable text.")
 
+        chunks = chunk_pages(
+            document_id=document.id,
+            pages=document.pages,
+            filename=document.filename,
+        )
 
-    embedded_chunks = embedding_service.embed_chunks(chunks)
+        embedded_chunks = embedding_service.embed_chunks(chunks)
 
-    logger.info(
-        "Embedding dimension: %d",
-        len(embedded_chunks[0].embedding),
-    )
+        indexing_started = True
+        vector_store.add(embedded_chunks)
 
-    vector_store.add(embedded_chunks)
+        metadata = DocumentMetadata(
+            id=document.id,
+            filename=document.filename,
+            path=str(document.path),
+            page_count=document.page_count,
+            character_count=len(document.text),
+            uploaded_at=datetime.now(UTC),
+        )
 
-    metadata = DocumentMetadata(
-        id=document.id,
-        filename=document.filename,
-        path=str(document.path),
-        page_count=document.page_count,
-        character_count=len(document.text),
-        uploaded_at=datetime.now(UTC),
-    )
+        metadata_write_started = True
+        save_metadata(metadata)
 
-    save_metadata(metadata)
+        return ProcessedDocument(
+            document=document,
+        )
+    except Exception:
+        if metadata_write_started:
+            try:
+                delete_metadata(saved_file.id)
+            except FileNotFoundError:
+                pass
+            except Exception:
+                logger.exception("Could not clean up metadata for %s", saved_file.id)
 
-    return ProcessedDocument(
-        document=document,
-    )
+        if indexing_started:
+            try:
+                vector_store.delete_document(saved_file.id)
+            except Exception:
+                logger.exception("Could not clean up vectors for %s", saved_file.id)
+
+        try:
+            saved_file.path.unlink(missing_ok=True)
+        except OSError:
+            logger.exception("Could not clean up PDF for %s", saved_file.id)
+
+        raise
 
 
 def delete_document(document_id: str) -> None:
+    vector_store.delete_document(document_id)
     delete_file(document_id)
     delete_metadata(document_id)
