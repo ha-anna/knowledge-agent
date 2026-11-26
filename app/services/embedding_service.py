@@ -1,4 +1,5 @@
 import logging
+from functools import cached_property
 
 from sentence_transformers import SentenceTransformer
 
@@ -9,14 +10,12 @@ logger = logging.getLogger(__name__)
 
 
 class EmbeddingService:
-    def __init__(
-        self,
-    ) -> None:
+    @cached_property
+    def model(self) -> SentenceTransformer:
         logger.info("Loading embedding model '%s'...", settings.embedding_model)
-
-        self.model = SentenceTransformer(settings.embedding_model)
-
+        model = SentenceTransformer(settings.embedding_model)
         logger.info("Embedding model loaded.")
+        return model
 
     def embed_chunk(self, chunk: Chunk) -> EmbeddedChunk:
         embedding = self.model.encode(
@@ -25,7 +24,7 @@ class EmbeddingService:
         )
 
         return EmbeddedChunk(
-            chunk=chunk,
+            source_chunk=chunk,
             embedding=embedding.tolist(),
         )
 
@@ -59,9 +58,12 @@ class EmbeddingService:
         )
 
         return embedded_chunks
-    
-    def embed_text(self, text: str,) -> list[float]:
-        
+
+    def embed_text(
+        self,
+        text: str,
+    ) -> list[float]:
+
         return self.model.encode(
             text,
             normalize_embeddings=True,

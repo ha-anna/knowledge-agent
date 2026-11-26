@@ -1,13 +1,14 @@
+from functools import cached_property
+
 from sentence_transformers import CrossEncoder
 
 from app.domain.search import SearchResult
 
 
 class RerankerService:
-    def __init__(self):
-        self.model = CrossEncoder(
-            "BAAI/bge-reranker-v2-m3"
-        )
+    @cached_property
+    def model(self) -> CrossEncoder:
+        return CrossEncoder("BAAI/bge-reranker-v2-m3")
 
     def rerank(
         self,
@@ -19,13 +20,7 @@ class RerankerService:
         if not results:
             return []
 
-        pairs = [
-            (
-                query,
-                result.text
-            )
-            for result in results
-        ]
+        pairs = [(query, result.text) for result in results]
 
         scores = self.model.predict(pairs)
 
