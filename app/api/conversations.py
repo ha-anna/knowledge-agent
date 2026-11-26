@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.core.dependencies.conversation_store import get_conversation_store
 from app.core.dependencies.rag import get_rag_service
@@ -33,33 +33,24 @@ def send_message(
     conversation_store: ConversationStore = Depends(get_conversation_store),
     rag_service: RAGService = Depends(get_rag_service),
 ):
-    user_message = Message(
-        role="user",
-        content=request.content,
-    )
+    try:
+        conversation = conversation_store.get(conversation_id)
+    except KeyError as exc:
+        raise HTTPException(
+            status_code=404,
+            detail="Conversation not found.",
+        ) from exc
 
-    conversation_store.add_message(
-        conversation_id,
-        user_message,
-    )
+    history = list(conversation.messages)
+    rag_response = rag_service.answer(request.content, history)
 
-    conversation = conversation_store.get(conversation_id)
-
-    history = conversation.messages[:-1]
-
-    rag_response = rag_service.answer(
-        request.content,
-        history,
-    )
-
+    user_message = Message(role="user", content=request.content)
     assistant_message = Message(
         role="assistant",
         content=rag_response.answer,
+        sources=rag_response.sources,
     )
-
-    conversation_store.add_message(
-        conversation_id,
-        assistant_message,
-    )
+    conversation_store.add_message(conversation_id, user_message)
+    conversation_store.add_message(conversation_id, assistant_message)
 
     return conversation_store.get(conversation_id)

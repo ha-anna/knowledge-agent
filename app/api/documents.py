@@ -13,6 +13,7 @@ router = APIRouter(
     tags=["Documents"],
 )
 
+
 @router.get("", response_model=DocumentListResponse)
 async def list_documents() -> DocumentListResponse:
     logger.info("Listing all documents")
@@ -22,9 +23,7 @@ async def list_documents() -> DocumentListResponse:
         "Returned %d documents",
         len(documents),
     )
-    return DocumentListResponse(
-        documents=[doc.to_response() for doc in documents]
-    )
+    return DocumentListResponse(documents=[doc.to_response() for doc in documents])
 
 
 @router.get(
@@ -49,6 +48,7 @@ async def get_document(document_id: str) -> DocumentMetadataResponse:
 
     return metadata.to_response()
 
+
 @router.delete("/{document_id}", status_code=204)
 async def delete_document_endpoint(document_id: str):
     try:
@@ -65,7 +65,7 @@ async def delete_document_endpoint(document_id: str):
         )
     except FileNotFoundError as e:
         logger.warning(str(e))
-        
+
         raise HTTPException(
             status_code=404,
             detail=str(e),

@@ -26,7 +26,7 @@ class DocumentMetadata:
             character_count=self.character_count,
             uploaded_at=self.uploaded_at,
         )
-    
+
     @classmethod
     def from_dict(cls, data: dict) -> "DocumentMetadata":
         return cls(
