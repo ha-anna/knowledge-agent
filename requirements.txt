@@ -246,6 +246,7 @@ pypika==0.51.1
     # via chromadb
 pyproject-hooks==1.2.0
     # via build
+pytest==9.2.0
 python-dateutil==2.9.0.post0
     # via kubernetes
 python-dotenv==1.2.2

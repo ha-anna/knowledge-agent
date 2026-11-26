@@ -7,3 +7,4 @@ pydantic-settings
 sentence-transformers
 chromadb
 ollama
+pytest
