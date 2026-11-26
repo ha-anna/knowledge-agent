@@ -14,10 +14,10 @@ class SearchResult:
     rerank_score: float | None = None
 
     def to_source(self) -> Source:
-            return Source(
-                filename=self.filename,
-                page_number=self.page_number,
-                chunk_id=self.chunk_id,
-                distance=self.distance,
-                snippet=self.text[:300],
-            )
+        return Source(
+            filename=self.filename,
+            page_number=self.page_number,
+            chunk_id=self.chunk_id,
+            distance=self.distance,
+            snippet=self.text[:300],
+        )

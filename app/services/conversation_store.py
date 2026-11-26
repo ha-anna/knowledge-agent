@@ -5,7 +5,6 @@ from app.domain.conversation import Conversation, Message
 
 
 class ConversationStore:
-
     def __init__(self):
         self.conversations = {}
 
@@ -21,10 +20,8 @@ class ConversationStore:
 
         return conversation
 
-
     def get(self, conversation_id: str) -> Conversation:
         return self.conversations[conversation_id]
-
 
     def add_message(
         self,
@@ -35,5 +32,3 @@ class ConversationStore:
 
         conversation.messages.append(message)
         conversation.updated_at = message.created_at
-
-    

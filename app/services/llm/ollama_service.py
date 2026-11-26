@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class OllamaService:
-
     def __init__(self):
         self.client = Client(
             host=settings.ollama_base_url,
@@ -32,7 +31,7 @@ class OllamaService:
             )
 
             return response["message"]["content"]
-        
+
         except Exception:
             logger.exception("Failed to generate LLM response")
             raise

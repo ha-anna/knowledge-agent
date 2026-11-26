@@ -28,9 +28,7 @@ def extract_document(
                 )
             )
 
-    text = "\n".join(
-        page.text for page in pages
-    )
+    text = "\n".join(page.text for page in pages)
 
     return Document(
         id=document_id,
@@ -40,4 +38,3 @@ def extract_document(
         pages=pages,
         page_count=len(reader.pages),
     )
-    

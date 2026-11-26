@@ -11,21 +11,18 @@ logger = logging.getLogger(__name__)
 
 
 class VectorStore:
-    def __init__(self, embedding_service: EmbeddingService,) -> None:
+    def __init__(
+        self,
+        embedding_service: EmbeddingService,
+    ) -> None:
         self.embedding_service = embedding_service
 
         logger.info("Initializing vector store")
-        
 
-        self.client = chromadb.PersistentClient(
-            path=str(settings.vector_db_dir)
-        )
+        self.client = chromadb.PersistentClient(path=str(settings.vector_db_dir))
 
         self.collection = self.client.get_or_create_collection(
-            name="documents",
-            metadata={
-                "hnsw:space": "cosine"
-            }
+            name="documents", metadata={"hnsw:space": "cosine"}
         )
 
         logger.info("Vector store ready")
@@ -38,8 +35,7 @@ class VectorStore:
             logger.info("No embedded chunks to add.")
             return
 
-
-        #temporary
+        # temporary
         for ec in chunks:
             logger.info(
                 "ADDING | page=%s chunk=%s text=%s",
@@ -93,7 +89,6 @@ class VectorStore:
         search_results = []
 
         for i in range(len(results["ids"][0])):
-
             distance = results["distances"][0][i]
 
             if distance > settings.distance_threshold:
@@ -114,15 +109,4 @@ class VectorStore:
 
     def delete_document(self, document_id: str):
 
-        self.collection.delete(
-            where={
-                "document_id": document_id
-            }
-        )
-    
-
-
-
-
-
-
+        self.collection.delete(where={"document_id": document_id})

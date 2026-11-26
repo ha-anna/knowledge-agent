@@ -1,6 +1,3 @@
-
-
-
 def build_rag_messages(
     question: str,
     context: str,
@@ -31,21 +28,23 @@ def build_rag_messages(
                 If the context contains insufficient information, explicitly say:
                     "I couldn't find this information in the uploaded documents."
                 """,
-        }]
+        }
+    ]
 
     for message in history:
-        messages.append({
-            "role": message["role"],
-            "content": message["content"],
-        })
+        messages.append(
+            {
+                "role": message["role"],
+                "content": message["content"],
+            }
+        )
 
-    messages.append({
-        "role": "user",
-        "content": (
-            f"Context:\n{context}\n\n"
-            f"Question:\n{question}"
-        ),
-    })
+    messages.append(
+        {
+            "role": "user",
+            "content": (f"Context:\n{context}\n\nQuestion:\n{question}"),
+        }
+    )
 
     return messages
 
@@ -62,4 +61,3 @@ def build_context(results):
         )
 
     return "\n\n".join(contexts)
-

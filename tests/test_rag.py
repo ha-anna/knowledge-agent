@@ -2,9 +2,7 @@ from app.core.dependencies.rag import rag_service
 
 
 def main():
-    response = rag_service.answer(
-        "List all technologies mentioned in the documents."
-    )
+    response = rag_service.answer("List all technologies mentioned in the documents.")
 
     print("=" * 50)
     print("ANSWER")

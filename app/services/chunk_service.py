@@ -44,7 +44,7 @@ def chunk_text(
                 id=f"{document_id}_{page_number}_{index}",
                 document_id=document_id,
                 filename=filename,
-                page_number= page_number,
+                page_number=page_number,
                 index=index,
                 text=text[start:end],
             )

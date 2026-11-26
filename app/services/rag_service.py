@@ -9,6 +9,7 @@ from app.services.vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 
+
 class RAGService:
     def __init__(
         self,
@@ -19,7 +20,7 @@ class RAGService:
         self.vector_store = vector_store
         self.llm_service = llm_service
         self.reranker_service = reranker_service
-    
+
     def answer(self, question: str, history: list[Message]) -> RAGResponse:
         logger.info("Searching vector store")
 
@@ -51,7 +52,7 @@ class RAGService:
                 getattr(result, "rerank_score", None),
                 result.text[:100],
             )
-        
+
         context = build_context(results)
 
         logger.info("Building prompt")
@@ -76,9 +77,5 @@ class RAGService:
 
         return RAGResponse(
             answer=answer,
-            sources=[
-                result.to_source()
-                for result in results
-            ],
+            sources=[result.to_source() for result in results],
         )
-    

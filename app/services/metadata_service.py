@@ -19,18 +19,18 @@ def save_metadata(metadata: DocumentMetadata) -> None:
             indent=4,
         )
 
+
 def load_metadata(document_id: str) -> DocumentMetadata:
     metadata_path = settings.metadata_dir / f"{document_id}.json"
 
     if not metadata_path.exists():
-        raise FileNotFoundError(
-            f"Document '{document_id}' not found."
-        )
+        raise FileNotFoundError(f"Document '{document_id}' not found.")
 
     with metadata_path.open("r", encoding="utf-8") as f:
         data = json.load(f)
 
     return DocumentMetadata.from_dict(data)
+
 
 def list_metadata() -> list[DocumentMetadata]:
     documents = []
@@ -43,12 +43,11 @@ def list_metadata() -> list[DocumentMetadata]:
 
     return documents
 
+
 def delete_metadata(document_id: str) -> None:
     metadata_path = settings.metadata_dir / f"{document_id}.json"
 
     if not metadata_path.exists():
-        raise FileNotFoundError(
-            f"Metadata for document '{document_id}' not found."
-        )
+        raise FileNotFoundError(f"Metadata for document '{document_id}' not found.")
 
     metadata_path.unlink()
